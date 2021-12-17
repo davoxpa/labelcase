@@ -17,7 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 			textEditor?.selections.forEach(selection => {
 				console.log(selection);
 				const originText = textEditor.document.getText(selection);
-				const newText = '_' + originText.toUpperCase().replace(' ', '_') + '_';
+				const newText = '{{"_' + originText.toUpperCase().replace(' ', '_') + '_" | translate }}';
 				// vscode.TextEdit.replace(selection, newText);
 				editBuilder.replace(selection, newText );
 				msg('finish');

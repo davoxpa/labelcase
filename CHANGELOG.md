@@ -6,4 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+## [0.0.3] - 2021-012-17
+convert label for angular 
+Example: 
+id position -> {{ "_ID_POSITION" | translate }}
