@@ -1,6 +1,6 @@
 {
-	"name": "labelcase",
-	"displayName": "labelCase",
+	"name": "convertXPathToCss",
+	"displayName": "convertXPathToCss",
 	"description": "",
 	"version": "0.0.3",
 	"engines": {
@@ -10,20 +10,20 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:labelcase.convertToLabel"
+		"onCommand:convertXPathToCss.convert"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "labelcase.convertToLabel",
-				"title": "convert to label"
+				"command": "convertXPathToCss.convert",
+				"title": "convert to css path"
 			}
 		]
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/davoxpa/labelcase"
+		"url": "git://github.com/davoxpa/convertXPathToCss"
 	},
 	"publisher": "davox",
 	"scripts": {

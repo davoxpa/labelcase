@@ -1,32 +1,50 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "labelcase" is now active!');
+	let disposable = vscode.commands.registerCommand('convertXPathToCss.convert', () => {
+		const editor = vscode.window.activeTextEditor;
+		if (!editor) {
+			vscode.window.showInformationMessage('No editor is active');
+			return;
+		}
 
-	let convertToLabel = vscode.commands.registerCommand('labelcase.convertToLabel', ()=>{
-		const {activeTextEditor: textEditor, showInformationMessage: msg} = vscode.window;
-		const {showTextDocument: dextDocument} = vscode.window;
-		textEditor?.edit(editBuilder=>{
-			textEditor?.selections.forEach(selection => {
-				console.log(selection);
-				const originText = textEditor.document.getText(selection);
-				const newText = '{{"_' + originText.toUpperCase().replace(' ', '_') + '_" | translate }}';
-				// vscode.TextEdit.replace(selection, newText);
-				editBuilder.replace(selection, newText );
-				msg('finish');
+		const selection = editor.selection;
+		const text = editor.document.getText(selection);
+
+		try {
+			const cssSelector = convertXPathToCss(text);
+			editor.edit(editBuilder => {
+				editBuilder.replace(selection, cssSelector);
 			});
-			
-		});
+		} catch (e) {
+			if (e instanceof Error) {
+				vscode.window.showErrorMessage('Error converting XPath to CSS: ' + e.message);
+			} else {
+				// Gestione dell'errore quando non si tratta di un oggetto Error
+				vscode.window.showErrorMessage('An unknown error occurred');
+			}
+		}
 	});
-	context.subscriptions.push(convertToLabel);
+
+	context.subscriptions.push(disposable);
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
+
+function convertXPathToCss(xpath: string): string {
+	// Conversione semplice: implementa qui la logica di conversione.
+	// Questo è solo un esempio e non funzionerà per tutti gli XPath.
+	let css = xpath
+		.replace(/^\//, '')
+		.replace(/\[(\d+?)\]/g, ':nth-of-type($1)')
+		.replace(/\/\//g, ' ')
+		.replace(/\//g, ' > ')
+		.replace(/@/g, '')
+		.replace(/\[contains\((.*?),\s?'(.*?)'\)\]/g, '$1*="$2"')
+		.replace(/\[(.*?)=(.*?)\]/g, '[$1="$2"]');
+
+	// Altri casi complessi dovrebbero essere gestiti qui.
+	// ...
+
+	return css;
+}
